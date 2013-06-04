@@ -59,22 +59,18 @@ public class ExtractZipFilePlugin extends CordovaPlugin {
 							  byte data[] = new byte[102222];
 							  String fileName = dirToInsert + entry.getName();
 							  File outFile = new File(fileName);
-							  if (entry.isDirectory()) 
+							  
+							  outFile.getParentFile().mkdirs();
+							  
+							  FileOutputStream fos = new FileOutputStream(outFile);
+							  dest = new BufferedOutputStream(fos, 102222);
+							  while ((count = is.read(data, 0, 102222)) != -1)
 							  {
-								  outFile.mkdirs();
-							  } 
-							  else 
-							  {
-								  FileOutputStream fos = new FileOutputStream(outFile);
-								  dest = new BufferedOutputStream(fos, 102222);
-								  while ((count = is.read(data, 0, 102222)) != -1)
-								  {
-									  dest.write(data, 0, count);
-								  }
-								  dest.flush();
-								  dest.close();
-								  is.close();
+								  dest.write(data, 0, count);
 							  }
+							  dest.flush();
+							  dest.close();
+							  is.close();
 						  }
 						callbackContext.success();
 					} catch (ZipException e1) {
